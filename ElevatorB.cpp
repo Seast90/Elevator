@@ -63,8 +63,22 @@ void dfs(int po, int an1, int an2, string s,int ans,int wait) //参数分别代表：电
 	else
 	{
 		string s2(po - 1, '0'), s3(10 - po, '1');
-		if (an1 > 0) dfs(1, 0, an2 + a[1][0], s + s2+ '2', ans + (po - 1)*(wait + an1 + an2), wait);  // 直接送乘客去1楼
-		if (an2 > 0) dfs(10, an1 + a[10][1], 0, s + s3 + '2', ans + (10 - po) * (wait + an1 + an2), wait); // 直接送乘客去10楼
+		if (an1 > 0)
+		{
+			int t1 = a[1][0], m = s.size();
+			a[1][0]= 0;
+			if (m<1 || s[m-1] != '2'|| po!=1)s2 += '2';
+			dfs(1, 0, an2 + t1, s + s2, ans + (po - 1)*(wait + an1 + an2), wait - t1);  // 直接送乘客去1楼
+			a[1][0] = t1;
+		}
+		if (an2 > 0)
+		{
+			int t1 = a[10][1], m = s.size();
+			a[10][1] = 0;
+			if (m<1 || s[m-1] != '2'|| po!=10)s3 += '2';
+			dfs(10, an1 + t1, 0, s + s3, ans + (10 - po) * (wait + an1 + an2), wait - t1); // 直接送乘客去10楼
+			a[10][1] = t1;
+		}
 		for (i = 1; i <= 10; i++)              // 去i 楼载乘客入电梯
 			if (a[i][0]>0 || a[i][1]>0)
 			{
@@ -100,8 +114,8 @@ int main()
 		max1 = 0xfffff; wait += man - k;
 		dfs(Ele.pos, Ele.ans[0], Ele.ans[1], s, 0, wait);
 		Eleva(t, s1, Ele.pos, Ele.ans[0], Ele.ans[1], wait);
-		
 	}
 	cout << "总耗时： "<<sum << endl<< s4 << endl;
+	system("pause");
 	return 0;
 }
