@@ -103,6 +103,5 @@ int main()
 		
 	}
 	cout << "×ÜºÄÊ±£º "<<sum << endl<< s4 << endl;
-	system("pause");
 	return 0;
 }
