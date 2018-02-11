@@ -37,7 +37,7 @@ void Eleva(int t, string s, int &pos, int &an1, int &an2,int &wait)
 			s1 = a[pos][0] + a[pos][1];
 			a[pos][0] = 0; a[pos][1] = 0;
 			wait -= s1;
-			printf("%d 时，停靠在%d楼 出 %d人 进 %d人。\n", i, pos, t1, s1);
+			printf("%d 时，停靠在%d楼: 进电梯  %d人，出电梯 %d人。\n", i, pos, s1, t1);
 		}
 		else
 		{
@@ -49,8 +49,8 @@ void Eleva(int t, string s, int &pos, int &an1, int &an2,int &wait)
 	}
 	time = t;
 }
-void dfs(int po, int an1, int an2, string s,int ans,int wait)
-{
+void dfs(int po, int an1, int an2, string s,int ans,int wait) //参数分别代表：电梯位置 电梯中去1楼人数 去10楼人数 电梯运作过程 
+{                                                             // 总耗时 电梯外等待人数
 	int i;
 	if (!an1 && !an2 && !wait)
 	{
@@ -63,23 +63,20 @@ void dfs(int po, int an1, int an2, string s,int ans,int wait)
 	else
 	{
 		string s2(po - 1, '0'), s3(10 - po, '1');
-		if (an1 > 0) dfs(1, 0, an2 + a[1][0], s + s2+ '2', ans + (po - 1)*(wait + an1 + an2), wait);
-		if (an2 > 0) dfs(10, an1 + a[10][1], 0, s + s3 + '2', ans + (10 - po) * (wait + an1 + an2), wait); // 在1楼开门 和在10楼开门
-		for (i = 1; i <= 10; i++)
+		if (an1 > 0) dfs(1, 0, an2 + a[1][0], s + s2+ '2', ans + (po - 1)*(wait + an1 + an2), wait);  // 直接送乘客去1楼
+		if (an2 > 0) dfs(10, an1 + a[10][1], 0, s + s3 + '2', ans + (10 - po) * (wait + an1 + an2), wait); // 直接送乘客去10楼
+		for (i = 1; i <= 10; i++)              // 去i 楼载乘客入电梯
 			if (a[i][0]>0 || a[i][1]>0)
 			{
 				char c;
 				if (po == i) c = '2';
 				else   c = (i < po) ? '0' : '1';
-				//if (c == '2') dfs(po, an1 + a[i][1], an2 + a[i][0], s + '2', ans + (wait + an1 + an2), wait - a[i][1] - a[i][0]);
-			//	else
-			//	{
+			
 					int t = abs(i - po), t1 = a[i][1], t2 = a[i][0];
 					string s2(t, c);
 					a[i][1] = 0; a[i][0] = 0;
 					dfs(i, an1 + t1, an2 + t2, s + s2 + '2', ans + (t + 1)*(wait + an1 + an2), wait - t1 - t2);
 					a[i][1] = t1; a[i][0] = t2;
-			//	}
 			}
 	}
 }
